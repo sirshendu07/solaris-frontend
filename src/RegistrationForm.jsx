@@ -23,20 +23,25 @@ const RegistrationForm = ({ group, onBack }) => {
     selectedSport: ''
   });
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Replace your old fetch line with this
-const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(formData)
-});
+      // We create a new object that includes the 'ageGroup' required by your backend
+      const payload = {
+        ...formData,
+        ageGroup: `Group ${group}` // This matches 'Group A', 'Group B', etc.
+      };
+
+      const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload) // 👈 Send the updated payload here
+      });
 
       const result = await response.json();
       if (response.ok) {
         alert("✅ Registration Successful!");
-        onBack(); // Go back to group selection
+        onBack(); 
       } else {
         alert("❌ Error: " + result.error);
       }
