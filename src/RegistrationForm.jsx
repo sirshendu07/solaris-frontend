@@ -26,11 +26,12 @@ const RegistrationForm = ({ group, onBack }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://solaris-backend-s1jz.onrender.com', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, ageGroup: group }) // Combines group with form data
-      });
+      // Replace your old fetch line with this
+const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+});
 
       const result = await response.json();
       if (response.ok) {
