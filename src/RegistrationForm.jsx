@@ -129,25 +129,29 @@ const RegistrationForm = ({ group, onBack }) => {
             </div>
           </div>
 
-          {/* Dynamic Checkbox Section */}
-          <div className="input-group">
-            <label className="section-label">Select {group} Sports (Max 2):</label>
-            {formData.gender ? (
-              <div className="checkbox-container">
-                {sportsByGroup[group][formData.gender].map(sport => (
-                  <label key={sport} className="checkbox-label">
-                    <input type="checkbox" 
-                      checked={formData.selectedSports.includes(sport)}
-                      onChange={() => handleSportChange(sport)} 
-                    />
-                    <span>{sport}</span>
-                  </label>
-                ))}
-              </div>
-            ) : (
-              <p className="helper-text">Please select Gender first to see available sports.</p>
-            )}
-          </div>
+        <div className="input-group">
+  <h3 style={{ color: '#00ffd5', fontSize: '1rem', marginBottom: '15px' }}>
+    Available Sports (Select up to 2):
+  </h3>
+
+  {formData.gender ? (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      {sportsByGroup[group][formData.gender].map((sport) => (
+        <label key={sport} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: '1.1rem' }}>
+          <input
+            type="checkbox"
+            style={{ width: '22px', height: '22px', marginRight: '15px', accentColor: '#00ffd5' }}
+            checked={formData.selectedSports.includes(sport)}
+            onChange={() => handleSportChange(sport)}
+          />
+          {sport}
+        </label>
+      ))}
+    </div>
+  ) : (
+    <p style={{ color: '#888', fontStyle: 'italic' }}>Please select Gender first.</p>
+  )}
+</div>
 
           <button type="submit" className="confirm-btn">CONFIRM REGISTRATION</button>
         </form>
