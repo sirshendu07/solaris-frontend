@@ -3,12 +3,30 @@ import { motion } from 'framer-motion';
 import './RegistrationForm.css';
 
 const sportsByGroup = {
-  'A': ['A1 - Kids Football', 'A2 - Sprint 50m'],
-  'B': ['B1 - Cricket', 'B2 - Football', 'B3 - Badminton'],
-  'C': ['C1 - Professional Football', 'C2 - Volleyball'],
-  'D': ['D1 - Veterans Cricket', 'D2 - Carrom'],
-  'E': ['E1 - Walking Race', 'E2 - Yoga'],
-  'F': ['F1 - Musical Chairs', 'F2 - Bridge']
+  'A': {
+    'Male': ['A1 - Kids Football', 'A2 - Sprint 50m'],
+    'Female': ['A1 - Kids Football', 'A2 - Musical Chairs']
+  },
+  'B': {
+    'Male': ['B1 - Cricket', 'B2 - Football'],
+    'Female': ['B3 - Badminton', 'B4 - Throwball']
+  },
+  'C': {
+    'Male': ['C1 - Pro Football', 'C2 - Volleyball'],
+    'Female': ['C1 - Pro Football', 'C3 - Athletics']
+  },
+  'D': {
+    'Male': ['D1 - Veterans Cricket', 'D2 - Carrom'],
+    'Female': ['D2 - Carrom', 'D3 - Chess']
+  },
+  'E': {
+    'Male': ['E1 - Walking Race', 'E2 - Yoga'],
+    'Female': ['E1 - Walking Race', 'E2 - Yoga']
+  },
+  'F': {
+    'Male': ['F1 - Musical Chairs', 'F2 - Bridge'],
+    'Female': ['F1 - Musical Chairs', 'F2 - Bridge']
+  }
 };
 
 const RegistrationForm = ({ group, onBack }) => {
