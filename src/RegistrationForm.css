@@ -155,3 +155,61 @@ select option {
         font-size: 1rem;
     }
 }
+
+/* NEW: Container for the sports list */
+.checkbox-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(0, 255, 213, 0.05); /* Very subtle cyan tint */
+    border-radius: 10px;
+    border: 1px dashed rgba(0, 255, 213, 0.3);
+}
+
+/* NEW: Individual row for each sport */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 15px;
+    transition: 0.2s ease;
+}
+
+/* NEW: The actual checkbox input styling */
+.checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    accent-color: #00ffd5; /* Changes checkbox color to match your theme */
+    cursor: pointer;
+}
+
+/* NEW: Hover effect for the sport text */
+.checkbox-label:hover {
+    color: #00ffd5;
+    text-shadow: 0 0 8px rgba(0, 255, 213, 0.4);
+}
+
+
+/* NEW: Label for the sports section */
+.section-label {
+    display: block;
+    color: #00ffd5;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+/* NEW: Style for the "Please select gender" helper text */
+.helper-text {
+    color: #888;
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-top: 10px;
+    text-align: center;
+}
