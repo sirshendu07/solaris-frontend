@@ -103,11 +103,10 @@
     color: #b9fff5;
     pointer-events: none;
     transition: 0.3s ease;
-    background: #11242d; /* Matches dark background to 'cut' the border */
+    background: #11242d;
     padding: 0 8px;
 }
 
-/* Floating label logic */
 .input-group input:focus + label,
 .input-group input:not(:placeholder-shown) + label,
 .input-group select:focus + label,
@@ -124,8 +123,14 @@ select option {
 }
 
 /* =========================================
-   5. DYNAMIC SPORTS CHECKBOXES
+   5. DYNAMIC SPORTS SECTION (CLEANED)
    ========================================= */
+.sports-section {
+    margin-bottom: 25px;
+    padding: 5px;
+    text-align: left;
+}
+
 .section-label {
     display: block;
     color: #00ffd5;
@@ -133,36 +138,28 @@ select option {
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
-.checkbox-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 15px;
-    background: rgba(0, 255, 213, 0.05);
-    border-radius: 10px;
-    border: 1px dashed rgba(0, 255, 213, 0.3);
-}
-
-.checkbox-label {
+.checkbox-row {
     display: flex;
     align-items: center;
+    margin-bottom: 12px;
     cursor: pointer;
     color: #ffffff;
-    font-size: 15px;
+    font-size: 1.1rem;
     transition: 0.2s ease;
 }
 
-.checkbox-label input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    margin-right: 12px;
+.checkbox-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
     accent-color: #00ffd5;
+    cursor: pointer;
 }
 
-.checkbox-label:hover {
+.checkbox-row:hover {
     color: #00ffd5;
     text-shadow: 0 0 8px rgba(0, 255, 213, 0.4);
 }
@@ -207,6 +204,11 @@ select option {
     margin-bottom: 15px;
     font-weight: bold;
     letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    text-shadow: 0 0 10px #00ffd5;
 }
 
 /* =========================================
