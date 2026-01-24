@@ -59,7 +59,7 @@ const RegistrationForm = ({ group, onBack }) => {
   return (
     <div className="registration-body">
       <div className="glow-box">
-        <motion.button onClick={onBack} className="back-btn" style={{ background: 'none', border: 'none', color: '#00ffd5', cursor: 'pointer', marginBottom: '15px' }}>
+        <motion.button onClick={onBack} style={{ background: 'none', border: 'none', color: '#00ffd5', cursor: 'pointer', marginBottom: '15px' }}>
           ← BACK
         </motion.button>
         
@@ -68,7 +68,7 @@ const RegistrationForm = ({ group, onBack }) => {
         <p className="subtitle">Annual Sports 2026 - SAC Committee</p>
 
         <form onSubmit={handleSubmit}>
-          {/* PERSONAL INFO */}
+          {/* USER INFO SECTION */}
           <div className="input-group">
             <input type="text" required placeholder=" " value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
             <label>Full Name</label>
@@ -93,7 +93,6 @@ const RegistrationForm = ({ group, onBack }) => {
             <label>Phone Number</label>
           </div>
 
-          {/* GENDER & STATUS */}
           <div style={{ display: 'flex', gap: '15px' }}>
             <div className="input-group" style={{ flex: 1 }}>
               <select required value={formData.gender} onChange={e => setFormData({...formData, gender: e.target.value, selectedSports: []})}>
@@ -111,28 +110,31 @@ const RegistrationForm = ({ group, onBack }) => {
             </div>
           </div>
 
-          {/* DYNAMIC SPORTS SECTION */}
-          <div style={{ marginBottom: '25px', textAlign: 'left' }}>
-            <label style={{ color: '#00ffd5', display: 'block', marginBottom: '15px', fontWeight: 'bold', fontSize: '14px' }}>
-              SELECT {group} SPORTS (MAX 2):
-            </label>
+          {/* SIMPLIFIED SPORTS SECTION (FIXED CLICK ISSUE) */}
+          <div style={{ marginBottom: '30px', padding: '10px 5px', textAlign: 'left' }}>
+            <h3 style={{ color: '#00ffd5', fontSize: '1rem', marginBottom: '15px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              Select {group} Sports (Max 2):
+            </h3>
 
             {formData.gender ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                 {sportsByGroup[group][formData.gender].map((sport) => (
-                  <label key={sport} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'white', fontSize: '16px' }}>
+                  <div key={sport} style={{ display: 'flex', alignItems: 'center' }}>
                     <input
                       type="checkbox"
-                      style={{ width: '20px', height: '20px', marginRight: '12px', accentColor: '#00ffd5', cursor: 'pointer' }}
+                      id={sport}
+                      style={{ width: '22px', height: '22px', marginRight: '15px', accentColor: '#00ffd5', cursor: 'pointer' }}
                       checked={formData.selectedSports.includes(sport)}
                       onChange={() => handleSportChange(sport)}
                     />
-                    {sport}
-                  </label>
+                    <label htmlFor={sport} style={{ position: 'static', transform: 'none', background: 'none', padding: 0, cursor: 'pointer', color: 'white', fontSize: '1.1rem' }}>
+                      {sport}
+                    </label>
+                  </div>
                 ))}
               </div>
             ) : (
-              <p style={{ color: '#888', fontStyle: 'italic', fontSize: '13px' }}>Please select Gender first to see available sports.</p>
+              <p style={{ color: '#888', fontStyle: 'italic', fontSize: '0.9rem' }}>Please select Gender first.</p>
             )}
           </div>
 
