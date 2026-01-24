@@ -30,7 +30,7 @@ const sportsByGroup = {
 };
 
 const RegistrationForm = ({ group, onBack }) => {
-  const availableSports = sportsByGroup[group] || [];
+  
  const [formData, setFormData] = useState({
   fullName: '',
   tower: '',
@@ -153,10 +153,9 @@ const handleSubmit = async (e) => {
             </div>
           </div>
 
-          <div className="input-group checkbox-group">
-  <label className="section-label">Select {group} Sports (Choose up to 2):</label>
+   <div className="input-group">
+  <label className="section-label">Select {group} Sports (Max 2):</label>
   
-  {/* Check if gender is selected to show the specific list */}
   {formData.gender && sportsByGroup[group] && sportsByGroup[group][formData.gender] ? (
     <div className="checkbox-container">
       {sportsByGroup[group][formData.gender].map(sport => (
@@ -166,7 +165,7 @@ const handleSubmit = async (e) => {
             checked={formData.selectedSports.includes(sport)}
             onChange={() => handleSportChange(sport)}
           />
-          <span className="sport-text">{sport}</span>
+          <span>{sport}</span>
         </label>
       ))}
     </div>
@@ -174,7 +173,6 @@ const handleSubmit = async (e) => {
     <p className="helper-text">Please select Gender first to see available sports.</p>
   )}
 </div>
-
           <button type="submit" className="confirm-btn">CONFIRM REGISTRATION</button>
         </form>
       </div>
