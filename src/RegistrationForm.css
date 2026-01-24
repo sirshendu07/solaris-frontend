@@ -1,4 +1,6 @@
-/* GLOBAL RESET */
+/* =========================================
+   1. GLOBAL RESET & BODY
+   ========================================= */
 * {
     margin: 0;
     padding: 0;
@@ -6,10 +8,8 @@
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* MAIN BACKGROUND */
 .registration-body {
     min-height: 100vh;
-    /* High-end radial gradient based on your reference */
     background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
     display: flex;
     justify-content: center;
@@ -18,57 +18,59 @@
     color: #ffffff;
 }
 
-/* THE GLOWING FORM CONTAINER */
+/* =========================================
+   2. THE GLOWING CONTAINER
+   ========================================= */
 .glow-box {
     position: relative;
     width: 100%;
     max-width: 520px;
     padding: 35px;
     border-radius: 18px;
-    background: rgba(0, 0, 0, 0.75); /* Deep dark background for contrast */
+    background: rgba(0, 0, 0, 0.85);
     border: 1px solid rgba(0, 255, 213, 0.2);
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
     animation: glow-pulse 3s infinite alternate;
 }
 
-/* Animation for the container glow */
 @keyframes glow-pulse {
     from { box-shadow: 0 0 20px rgba(0, 242, 255, 0.3); }
     to { box-shadow: 0 0 40px rgba(0, 255, 213, 0.5); }
 }
 
-/* TEXT VISIBILITY FIXES */
+/* =========================================
+   3. TYPOGRAPHY
+   ========================================= */
 .glow-box h2 {
     text-align: center;
-    color: #ffffff; /* Top branding in white */
+    color: #ffffff;
     font-size: clamp(0.9rem, 2vw, 1.1rem);
     margin-bottom: 8px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    font-weight: 500;
 }
 
 .glow-box h1 {
     text-align: center;
-    color: #00ffd5; /* Bright Cyan for the main title */
+    color: #00ffd5;
     font-size: clamp(1.6rem, 4vw, 2.4rem);
     font-weight: 900;
     margin-bottom: 10px;
-    /* Professional text glow */
     text-shadow: 0 0 15px rgba(0, 255, 213, 0.6);
     text-transform: uppercase;
 }
 
 .subtitle {
     text-align: center;
-    color: #a8fff0; /* Light cyan for the SAC Committee text */
+    color: #a8fff0;
     margin-bottom: 30px;
     font-size: 14px;
-    font-weight: 500;
     letter-spacing: 1px;
 }
 
-/* INPUT GROUPS & FLOATING LABELS */
+/* =========================================
+   4. INPUTS & FLOATING LABELS
+   ========================================= */
 .input-group {
     position: relative;
     margin-bottom: 25px;
@@ -81,7 +83,7 @@
     background: transparent;
     border: 1px solid #00ffd5;
     border-radius: 8px;
-    color: #ffffff !important; /* Forces text to be white */
+    color: #ffffff !important;
     font-size: 15px;
     outline: none;
     transition: 0.3s ease;
@@ -98,14 +100,14 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: #b9fff5; /* Soft cyan for labels */
+    color: #b9fff5;
     pointer-events: none;
     transition: 0.3s ease;
-    background: #162c35; /* Matches the background to "cut" through the border */
+    background: #11242d; /* Matches dark background to 'cut' the border */
     padding: 0 8px;
 }
 
-/* Floating label logic: moves up on focus or when input is not empty */
+/* Floating label logic */
 .input-group input:focus + label,
 .input-group input:not(:placeholder-shown) + label,
 .input-group select:focus + label,
@@ -116,59 +118,34 @@
     font-weight: bold;
 }
 
-/* DROPDOWN STYLING */
 select option {
-    background-color: #0f2027; /* Dark background for the list */
+    background-color: #0f2027;
     color: #ffffff;
 }
 
-/* SUBMIT BUTTON */
-.confirm-btn {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(90deg, #00ffd5, #00f2ff);
-    border: none;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: #000000; /* Black text on bright button for readability */
-    cursor: pointer;
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* =========================================
+   5. DYNAMIC SPORTS CHECKBOXES
+   ========================================= */
+.section-label {
+    display: block;
+    color: #00ffd5;
+    font-size: 0.85rem;
+    font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-bottom: 10px;
 }
 
-.confirm-btn:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0 25px #00ffd5;
-    letter-spacing: 2px;
-}
-
-/* RESPONSIVE ADJUSTMENTS */
-@media (max-width: 480px) {
-    .glow-box {
-        padding: 25px 20px;
-    }
-    
-    .confirm-btn {
-        padding: 14px;
-        font-size: 1rem;
-    }
-}
-
-/* NEW: Container for the sports list */
 .checkbox-container {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-top: 15px;
     padding: 15px;
-    background: rgba(0, 255, 213, 0.05); /* Very subtle cyan tint */
+    background: rgba(0, 255, 213, 0.05);
     border-radius: 10px;
     border: 1px dashed rgba(0, 255, 213, 0.3);
 }
 
-/* NEW: Individual row for each sport */
 .checkbox-label {
     display: flex;
     align-items: center;
@@ -178,38 +155,65 @@ select option {
     transition: 0.2s ease;
 }
 
-/* NEW: The actual checkbox input styling */
 .checkbox-label input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     margin-right: 12px;
-    accent-color: #00ffd5; /* Changes checkbox color to match your theme */
-    cursor: pointer;
+    accent-color: #00ffd5;
 }
 
-/* NEW: Hover effect for the sport text */
 .checkbox-label:hover {
     color: #00ffd5;
     text-shadow: 0 0 8px rgba(0, 255, 213, 0.4);
 }
 
-
-/* NEW: Label for the sports section */
-.section-label {
-    display: block;
-    color: #00ffd5;
-    font-size: 0.85rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 5px;
-}
-
-/* NEW: Style for the "Please select gender" helper text */
 .helper-text {
     color: #888;
     font-size: 0.85rem;
     font-style: italic;
-    margin-top: 10px;
     text-align: center;
+}
+
+/* =========================================
+   6. BUTTONS
+   ========================================= */
+.confirm-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(90deg, #00ffd5, #00f2ff);
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #000000;
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+.confirm-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 25px #00ffd5;
+    letter-spacing: 2px;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: #00ffd5;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* =========================================
+   7. RESPONSIVENESS
+   ========================================= */
+@media (max-width: 480px) {
+    .glow-box {
+        padding: 25px 20px;
+    }
 }
