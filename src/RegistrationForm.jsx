@@ -31,42 +31,67 @@ const sportsByGroup = {
 
 const RegistrationForm = ({ group, onBack }) => {
   const availableSports = sportsByGroup[group] || [];
-  const [formData, setFormData] = useState({
-    fullName: '',
-    tower: '',
-    flatNo: '',
-    phoneNo: '',
-    gender: '',
-    residentialStatus: '',
-    selectedSport: ''
-  });
+ const [formData, setFormData] = useState({
+  fullName: '',
+  tower: '',
+  flatNo: '',
+  phoneNo: '',
+  gender: '',
+  residentialStatus: '',
+  selectedSports: [] // 👈 Change this to an empty array
+});
+
+const handleSportChange = (sport) => {
+    setFormData(prev => {
+      const current = prev.selectedSports || []; // Fallback to empty array
+      
+      if (current.includes(sport)) {
+        // Uncheck: remove from list
+        return { ...prev, selectedSports: current.filter(s => s !== sport) };
+      } 
+      
+      if (current.length < 2) {
+        // Check: add to list
+        return { ...prev, selectedSports: [...current, sport] };
+      }
+      
+      alert("Maximum 2 sports allowed!");
+      return prev;
+    });
+  };
 
 const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // We create a new object that includes the 'ageGroup' required by your backend
-      const payload = {
-        ...formData,
-        ageGroup: `Group ${group}` // This matches 'Group A', 'Group B', etc.
-      };
+  e.preventDefault();
+  
+  // Basic validation to make sure they picked at least one sport
+  if (formData.selectedSports.length === 0) {
+    alert("Please select at least one sport.");
+    return;
+  }
 
-      const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload) // 👈 Send the updated payload here
-      });
+  try {
+    const payload = {
+      ...formData,
+      ageGroup: `Group ${group}`
+    };
 
-      const result = await response.json();
-      if (response.ok) {
-        alert("✅ Registration Successful!");
-        onBack(); 
-      } else {
-        alert("❌ Error: " + result.error);
-      }
-    } catch (err) {
-      alert("❌ Server Error. Please check if your Node backend is running.");
+    const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload) // 👈 This now sends the array 'selectedSports'
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      alert("✅ Registration Successful!");
+      onBack(); 
+    } else {
+      alert("❌ Error: " + result.error);
     }
-  };
+  } catch (err) {
+    alert("❌ Server Error. Please check if your Node backend is running.");
+  }
+};
 
   return (
     <div className="registration-body">
@@ -128,13 +153,27 @@ const handleSubmit = async (e) => {
             </div>
           </div>
 
-          <div className="input-group">
-            <select required value={formData.selectedSport} onChange={e => setFormData({...formData, selectedSport: e.target.value})}>
-              <option value="" disabled hidden></option>
-              {availableSports.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-            <label>Select {group} Sport</label>
-          </div>
+          <div className="input-group checkbox-group">
+  <label className="section-label">Select {group} Sports (Choose up to 2):</label>
+  
+  {/* Check if gender is selected to show the specific list */}
+  {formData.gender && sportsByGroup[group] && sportsByGroup[group][formData.gender] ? (
+    <div className="checkbox-container">
+      {sportsByGroup[group][formData.gender].map(sport => (
+        <label key={sport} className="checkbox-label">
+          <input
+            type="checkbox"
+            checked={formData.selectedSports.includes(sport)}
+            onChange={() => handleSportChange(sport)}
+          />
+          <span className="sport-text">{sport}</span>
+        </label>
+      ))}
+    </div>
+  ) : (
+    <p className="helper-text">Please select Gender first to see available sports.</p>
+  )}
+</div>
 
           <button type="submit" className="confirm-btn">CONFIRM REGISTRATION</button>
         </form>
