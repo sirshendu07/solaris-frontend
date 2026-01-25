@@ -38,31 +38,37 @@ const RegistrationForm = ({ group, onBack }) => {
     }
   }, [formData.gender, group]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const payload = {
-        ...formData,
-        ageGroup: `Group ${group}`
-      };
+// 1. Add 'loading' to your state at the top of the component
+const [loading, setLoading] = useState(false); 
 
-      const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // 2. IMMEDIATELY set loading to true to disable the button
+  setLoading(true); 
 
-      if (response.ok) {
-        alert("✅ Registration Successful!");
-        onBack(); 
-      } else {
-        const result = await response.json();
-        alert("❌ Error: " + result.error);
-      }
-    } catch (err) {
-      alert("❌ Server Error. Please check your internet connection.");
+  try {
+    const payload = { ...formData, ageGroup: `Group ${group}` };
+    const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      alert("✅ Registration Successful!");
+      onBack(); 
+    } else {
+      const result = await response.json();
+      alert("❌ Error: " + result.error);
+      // 3. Set loading back to false if there's an error so they can try again
+      setLoading(false); 
     }
-  };
+  } catch (err) {
+    alert("❌ Server Error. Please check your connection.");
+    setLoading(false); 
+  }
+};
 
   return (
     <div className="registration-body">
@@ -148,7 +154,14 @@ const RegistrationForm = ({ group, onBack }) => {
             )}
           </div>
 
-          <button type="submit" className="confirm-btn">CONFIRM REGISTRATION</button>
+          <button 
+  type="submit" 
+  className="confirm-btn" 
+  disabled={loading} // This prevents multiple clicks
+  style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+>
+  {loading ? "SUBMITTING..." : "CONFIRM REGISTRATION"} 
+</button>
         </form>
       </div>
     </div>
