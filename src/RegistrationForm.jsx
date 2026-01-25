@@ -1,49 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './RegistrationForm.css';
 
-const sportsByGroup = {
-  'A': { 'Male': ['A1 - Kids Football', 'A2 - Sprint 50m'], 'Female': ['A1 - Kids Football', 'A2 - Musical Chairs'] },
-  'B': { 'Male': ['B1 - Cricket', 'B2 - Football'], 'Female': ['B3 - Badminton', 'B4 - Throwball'] },
-  'C': { 'Male': ['C1 - Pro Football', 'C2 - Volleyball'], 'Female': ['C1 - Pro Football', 'C3 - Athletics'] },
-  'D': { 'Male': ['D1 - Veterans Cricket', 'D2 - Carrom'], 'Female': ['D2 - Carrom', 'D3 - Chess'] },
-  'E': { 'Male': ['E1 - Walking Race', 'E2 - Yoga'], 'Female': ['E1 - Walking Race', 'E2 - Yoga'] },
-  'F': { 'Male': ['F1 - Musical Chairs', 'F2 - Bridge'], 'Female': ['F1 - Musical Chairs', 'F2 - Bridge'] }
+const getAutoEvents = (groupId, gender) => {
+  const eventMap = {
+    'A': ['25 meter run/walker'],
+    'B': ['Run 50 meter', 'Tomato/Orange race'],
+    'C': ['Math race', 'Balance race (chamoch tuli)'],
+    'D': gender === 'Male' ? ['Spot Jump', '50 meter run'] : ['Memory race', 'Such e suto porano'],
+    'E': gender === 'Male' ? ['Hit the wicket', '50 meter run'] : ['Memory race', 'Such e suto porano'],
+    'F': gender === 'Male' ? ['Aim the football goal', 'Balance race'] : ['Musical chair', 'Balance race'],
+    'G': ['Hari vanga'],
+    'H': ['Go as you like'] // Now exclusively in Group H
+  };
+
+  return eventMap[groupId] || [];
 };
 
 const RegistrationForm = ({ group, onBack }) => {
   const [formData, setFormData] = useState({
-    fullName: '', tower: '', flatNo: '', phoneNo: '', gender: '', residentialStatus: '',
+    fullName: '',
+    tower: '',
+    flatNo: '',
+    phoneNo: '',
+    gender: '',
+    residentialStatus: '',
     selectedSports: [] 
   });
 
-  const handleSportChange = (sport) => {
-    setFormData(prev => {
-      const current = prev.selectedSports || [];
-      if (current.includes(sport)) {
-        return { ...prev, selectedSports: current.filter(s => s !== sport) };
-      } 
-      if (current.length < 2) {
-        return { ...prev, selectedSports: [...current, sport] };
-      }
-      alert("Maximum 2 sports allowed!");
-      return prev;
-    });
-  };
+  useEffect(() => {
+    // Groups that need gender to determine events: D, E, F
+    const needsGender = ['D', 'E', 'F'].includes(group);
+    
+    if (!needsGender || (needsGender && formData.gender)) {
+      const events = getAutoEvents(group, formData.gender);
+      setFormData(prev => ({ ...prev, selectedSports: events }));
+    }
+  }, [formData.gender, group]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.selectedSports.length === 0) {
-      alert("Please select at least one sport.");
-      return;
-    }
     try {
-      const payload = { ...formData, ageGroup: `Group ${group}` };
+      const payload = {
+        ...formData,
+        ageGroup: `Group ${group}`
+      };
+
       const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+
       if (response.ok) {
         alert("✅ Registration Successful!");
         onBack(); 
@@ -52,25 +60,23 @@ const RegistrationForm = ({ group, onBack }) => {
         alert("❌ Error: " + result.error);
       }
     } catch (err) {
-      alert("❌ Server Error. Please check your internet.");
+      alert("❌ Server Error. Please check your internet connection.");
     }
   };
 
   return (
     <div className="registration-body">
       <div className="glow-box">
-        <motion.button onClick={onBack} style={{ background: 'none', border: 'none', color: '#00ffd5', cursor: 'pointer', marginBottom: '15px' }}>
-          ← BACK
-        </motion.button>
+        <motion.button onClick={onBack} className="back-btn">← BACK</motion.button>
         
         <h2>SOLARIS BONHOOGHLY PHASE 1</h2>
         <h1>GROUP {group} REGISTRATION</h1>
         <p className="subtitle">Annual Sports 2026 - SAC Committee</p>
 
         <form onSubmit={handleSubmit}>
-          {/* USER INFO SECTION */}
           <div className="input-group">
-            <input type="text" required placeholder=" " value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
+            <input type="text" required placeholder=" " value={formData.fullName}
+              onChange={e => setFormData({...formData, fullName: e.target.value})} />
             <label>Full Name</label>
           </div>
 
@@ -78,63 +84,67 @@ const RegistrationForm = ({ group, onBack }) => {
             <div className="input-group" style={{ flex: 1 }}>
               <select required value={formData.tower} onChange={e => setFormData({...formData, tower: e.target.value})}>
                 <option value="" disabled hidden></option>
-                <option value="I">I</option><option value="II">II</option>
+                <option value="I">I</option>
+                <option value="II">II</option>
               </select>
               <label>Tower</label>
             </div>
             <div className="input-group" style={{ flex: 1 }}>
-              <input type="text" required placeholder=" " value={formData.flatNo} onChange={e => setFormData({...formData, flatNo: e.target.value})} />
+              <input type="text" required placeholder=" " value={formData.flatNo}
+                onChange={e => setFormData({...formData, flatNo: e.target.value})} />
               <label>Flat No</label>
             </div>
           </div>
 
           <div className="input-group">
-            <input type="tel" required placeholder=" " value={formData.phoneNo} onChange={e => setFormData({...formData, phoneNo: e.target.value})} />
+            <input type="tel" required placeholder=" " value={formData.phoneNo}
+              onChange={e => setFormData({...formData, phoneNo: e.target.value})} />
             <label>Phone Number</label>
           </div>
 
           <div style={{ display: 'flex', gap: '15px' }}>
             <div className="input-group" style={{ flex: 1 }}>
-              <select required value={formData.gender} onChange={e => setFormData({...formData, gender: e.target.value, selectedSports: []})}>
+              <select required value={formData.gender} 
+                onChange={e => setFormData({...formData, gender: e.target.value})}>
                 <option value="" disabled hidden></option>
-                <option value="Male">Male</option><option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
               </select>
               <label>Gender</label>
             </div>
             <div className="input-group" style={{ flex: 1 }}>
-              <select required value={formData.residentialStatus} onChange={e => setFormData({...formData, residentialStatus: e.target.value})}>
+              <select required value={formData.residentialStatus} 
+                onChange={e => setFormData({...formData, residentialStatus: e.target.value})}>
                 <option value="" disabled hidden></option>
-                <option value="Owner">Owner</option><option value="Tenant">Tenant</option>
+                <option value="Owner">Owner</option>
+                <option value="Tenant">Tenant</option>
               </select>
               <label>Status</label>
             </div>
           </div>
 
-          {/* SIMPLIFIED SPORTS SECTION (FIXED CLICK ISSUE) */}
-          <div style={{ marginBottom: '30px', padding: '10px 5px', textAlign: 'left' }}>
-            <h3 style={{ color: '#00ffd5', fontSize: '1rem', marginBottom: '15px', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              Select {group} Sports (Max 2):
+          <div style={{ 
+            marginBottom: '30px', 
+            padding: '15px', 
+            background: 'rgba(0, 255, 213, 0.05)', 
+            borderRadius: '10px', 
+            border: '1px dashed rgba(0, 255, 213, 0.3)' 
+          }}>
+            <h3 style={{ color: '#00ffd5', fontSize: '0.9rem', marginBottom: '10px', textTransform: 'uppercase' }}>
+              Events You Are Joining:
             </h3>
-
-            {formData.gender ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                {sportsByGroup[group][formData.gender].map((sport) => (
-                  <div key={sport} style={{ display: 'flex', alignItems: 'center' }}>
-                    <input
-                      type="checkbox"
-                      id={sport}
-                      style={{ width: '22px', height: '22px', marginRight: '15px', accentColor: '#00ffd5', cursor: 'pointer' }}
-                      checked={formData.selectedSports.includes(sport)}
-                      onChange={() => handleSportChange(sport)}
-                    />
-                    <label htmlFor={sport} style={{ position: 'static', transform: 'none', background: 'none', padding: 0, cursor: 'pointer', color: 'white', fontSize: '1.1rem' }}>
-                      {sport}
-                    </label>
-                  </div>
+            {(formData.gender || !['D', 'E', 'F'].includes(group)) ? (
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                {formData.selectedSports.map(sport => (
+                  <li key={sport} style={{ color: 'white', marginBottom: '8px', fontSize: '1.05rem' }}>
+                    🏆 {sport}
+                  </li>
                 ))}
-              </div>
+              </ul>
             ) : (
-              <p style={{ color: '#888', fontStyle: 'italic', fontSize: '0.9rem' }}>Please select Gender first.</p>
+              <p style={{ color: '#888', fontStyle: 'italic', fontSize: '0.9rem' }}>
+                Please select Gender to see events.
+              </p>
             )}
           </div>
 
