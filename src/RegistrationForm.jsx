@@ -6,14 +6,14 @@ const getAutoEvents = (groupId, gender) => {
   const eventMap = {
     'A': ['25 meter run/walker'],
     'B': ['Run 50 meter', 'Tomato/Orange race'],
-    'C': ['Math race', 'Balance race (chamoch tuli)'],
-    'D': gender === 'Male' ? ['Spot Jump', '50 meter run'] : ['Memory race', 'Such e suto porano'],
-    'E': gender === 'Male' ? ['Hit the wicket', '50 meter run'] : ['Memory race', 'Such e suto porano'],
-    'F': gender === 'Male' ? ['Aim the football goal', 'Balance race'] : ['Musical chair', 'Balance race'],
-    'G': ['Hari vanga'],
-    'H': ['Go as you like'] // Now exclusively in Group H
+    'C': ['Math race', 'Tomato/Orange race'],
+    'D': ['Math race', 'Balance race (chamoch tuli)'],
+    'E': gender === 'Male' ? ['Spot Jump', '50 meter run'] : ['Memory race', 'Such e suto porano'],
+    'F': gender === 'Male' ? ['Hit the wicket', 'Aim the football goal'] : ['Memory race', 'Such e suto porano'],
+    'G': gender === 'Male' ? ['Aim the football goal', 'Balance race'] : ['Musical chair', 'Balance race'],
+    'H': gender === 'Male' ? ['Hari vanga', 'Hit the wicket'] : ['Hari vanga', 'Balance race'],
+    'I': ['Go as you like']
   };
-
   return eventMap[groupId] || [];
 };
 

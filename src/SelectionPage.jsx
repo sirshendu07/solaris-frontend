@@ -2,26 +2,31 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const groups = [
-  { id: 'A', limit: '0-5', events: ['25 meter run/walker'] },
-  { id: 'B', limit: '6-10', events: ['Run 50 meter', 'Tomato/Orange race'] },
-  { id: 'C', limit: '11-15', events: ['Math race', 'Balance race'] },
+  { id: 'A', limit: '0-3', events: ['25 meter run/walker'] },
+  { id: 'B', limit: '4-7', events: ['Run 50 meter', 'Tomato/Orange race'] },
+  { id: 'C', limit: '8-10', events: ['Math race', 'Tomato/Orange race'] },
+  { id: 'D', limit: '11-15', events: ['Math race', 'Balance race (chamoch tuli)'] },
   { 
-    id: 'D', limit: '16-25', 
-    male: ['Spot Jump', '50m Run'], 
+    id: 'E', limit: '16-25', 
+    male: ['Spot Jump', '50 meter run'], 
     female: ['Memory race', 'Such e suto porano'] 
   },
   { 
-    id: 'E', limit: '26-35', 
-    male: ['Hit the wicket', '50m Run'], 
+    id: 'F', limit: '26-35', 
+    male: ['Hit the wicket', 'Aim the football goal'], 
     female: ['Memory race', 'Such e suto porano'] 
   },
   { 
-    id: 'F', limit: '36-50', 
-    male: ['Aim the goal', 'Balance race'], 
+    id: 'G', limit: '36-50', 
+    male: ['Aim the football goal', 'Balance race'], 
     female: ['Musical chair', 'Balance race'] 
   },
-  { id: 'G', limit: '50+', events: ['Hari vanga'] },
-  { id: 'H', limit: 'Everyone', events: ['Go as you like'], isSpecial: true }
+  { 
+    id: 'H', limit: '50+', 
+    male: ['Hari vanga', 'Hit the wicket'], 
+    female: ['Hari vanga', 'Balance race'] 
+  },
+  { id: 'I', limit: 'Everyone', events: ['Go as you like'], isSpecial: true }
 ];
 
 const SelectionPage = ({ onSelectGroup, onBack }) => {
@@ -55,11 +60,11 @@ const SelectionPage = ({ onSelectGroup, onBack }) => {
 
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-        gap: '25px', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+        gap: '20px', 
         width: '100%', maxWidth: '1200px' 
       }}>
-        {groups.map((group, index) => (
+        {groups.map((group) => (
           <motion.div
             key={group.id}
             whileHover={{ y: -5, borderColor: cyan, boxShadow: `0 0 20px rgba(158, 249, 255, 0.2)` }}
@@ -72,9 +77,9 @@ const SelectionPage = ({ onSelectGroup, onBack }) => {
               transition: '0.3s'
             }}
           >
-            <h3 style={{ color: cyan, fontSize: '2.5rem', margin: 0, fontWeight: '900' }}>{group.id}</h3>
+            <h3 style={{ color: cyan, fontSize: '2rem', margin: 0, fontWeight: '900' }}>Group {group.id}</h3>
             
-            <p style={{ color: '#fff', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '5px' }}>
+            <p style={{ color: '#fff', fontSize: '1rem', fontWeight: 'bold', marginTop: '5px' }}>
                 AGE: {group.limit}
             </p>
 
@@ -83,19 +88,23 @@ const SelectionPage = ({ onSelectGroup, onBack }) => {
             <div style={{ textAlign: 'left', marginTop: '10px' }}>
               {group.events ? (
                 group.events.map(e => (
-                    <p key={e} style={{ color: group.isSpecial ? '#00ffd5' : '#ccc', fontSize: '0.9rem', margin: '5px 0' }}>
+                    <p key={e} style={{ color: group.isSpecial ? '#00ffd5' : '#ccc', fontSize: '0.85rem', margin: '5px 0' }}>
                         • {e}
                     </p>
                 ))
               ) : (
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
                   <div style={{ flex: 1 }}>
-                    <p style={{ color: cyan, fontSize: '0.75rem', fontWeight: 'bold' }}>MALE</p>
-                    {group.male.map(e => <p key={e} style={{ color: '#ccc', fontSize: '0.75rem', margin: '3px 0' }}>• {e}</p>)}
+                    <p style={{ color: cyan, fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '5px' }}>MALE</p>
+                    {group.male.map(e => (
+                      <p key={e} style={{ color: '#ccc', fontSize: '0.7rem', margin: '3px 0' }}>• {e}</p>
+                    ))}
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ color: cyan, fontSize: '0.75rem', fontWeight: 'bold' }}>FEMALE</p>
-                    {group.female.map(e => <p key={e} style={{ color: '#ccc', fontSize: '0.75rem', margin: '3px 0' }}>• {e}</p>)}
+                  <div style={{ flex: 1, borderLeft: '1px solid rgba(158, 249, 255, 0.1)', paddingLeft: '10px' }}>
+                    <p style={{ color: cyan, fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '5px' }}>FEMALE</p>
+                    {group.female.map(e => (
+                      <p key={e} style={{ color: '#ccc', fontSize: '0.7rem', margin: '3px 0' }}>• {e}</p>
+                    ))}
                   </div>
                 </div>
               )}
