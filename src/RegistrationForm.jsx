@@ -28,15 +28,19 @@ const RegistrationForm = ({ group, onBack }) => {
     selectedSports: [] 
   });
 
-  useEffect(() => {
-    // Groups that need gender to determine events: D, E, F
-    const needsGender = ['D', 'E', 'F'].includes(group);
-    
-    if (!needsGender || (needsGender && formData.gender)) {
-      const events = getAutoEvents(group, formData.gender);
-      setFormData(prev => ({ ...prev, selectedSports: events }));
-    }
-  }, [formData.gender, group]);
+useEffect(() => {
+  // Define groups that DO NOT need gender to show events
+  const genderIndependentGroups = ['A', 'B', 'C', 'D', 'I'];
+  
+  // Show events IF the group doesn't need gender OR if gender is already selected
+  if (genderIndependentGroups.includes(group) || formData.gender) {
+    const events = getAutoEvents(group, formData.gender);
+    setFormData(prev => ({ ...prev, selectedSports: events }));
+  } else {
+    // Clear sports if gender is removed for gender-dependent groups
+    setFormData(prev => ({ ...prev, selectedSports: [] }));
+  }
+}, [formData.gender, group]);
 
 // 1. Add 'loading' to your state at the top of the component
 const [loading, setLoading] = useState(false); 
@@ -70,7 +74,7 @@ const handleSubmit = async (e) => {
   }
 };
 
-  return (
+return (
     <div className="registration-body">
       <div className="glow-box">
         <motion.button onClick={onBack} className="back-btn">← BACK</motion.button>
@@ -80,12 +84,14 @@ const handleSubmit = async (e) => {
         <p className="subtitle">Annual Sports 2026 - SAC Committee</p>
 
         <form onSubmit={handleSubmit}>
+          {/* NAME INPUT */}
           <div className="input-group">
             <input type="text" required placeholder=" " value={formData.fullName}
               onChange={e => setFormData({...formData, fullName: e.target.value})} />
             <label>Full Name</label>
           </div>
 
+          {/* TOWER & FLAT */}
           <div style={{ display: 'flex', gap: '15px' }}>
             <div className="input-group" style={{ flex: 1 }}>
               <select required value={formData.tower} onChange={e => setFormData({...formData, tower: e.target.value})}>
@@ -102,12 +108,14 @@ const handleSubmit = async (e) => {
             </div>
           </div>
 
+          {/* PHONE NUMBER */}
           <div className="input-group">
             <input type="tel" required placeholder=" " value={formData.phoneNo}
               onChange={e => setFormData({...formData, phoneNo: e.target.value})} />
             <label>Phone Number</label>
           </div>
 
+          {/* GENDER & STATUS */}
           <div style={{ display: 'flex', gap: '15px' }}>
             <div className="input-group" style={{ flex: 1 }}>
               <select required value={formData.gender} 
@@ -129,6 +137,7 @@ const handleSubmit = async (e) => {
             </div>
           </div>
 
+          {/* EVENT DISPLAY LOGIC */}
           <div style={{ 
             marginBottom: '30px', 
             padding: '15px', 
@@ -139,7 +148,9 @@ const handleSubmit = async (e) => {
             <h3 style={{ color: '#00ffd5', fontSize: '0.9rem', marginBottom: '10px', textTransform: 'uppercase' }}>
               Events You Are Joining:
             </h3>
-            {(formData.gender || !['D', 'E', 'F'].includes(group)) ? (
+            
+            {/* Logic: Show events if it's a general group OR if gender is selected for specific groups */}
+            {(['A', 'B', 'C', 'D', 'I'].includes(group) || formData.gender) ? (
               <ul style={{ listStyle: 'none', padding: 0 }}>
                 {formData.selectedSports.map(sport => (
                   <li key={sport} style={{ color: 'white', marginBottom: '8px', fontSize: '1.05rem' }}>
@@ -155,13 +166,13 @@ const handleSubmit = async (e) => {
           </div>
 
           <button 
-  type="submit" 
-  className="confirm-btn" 
-  disabled={loading} // This prevents multiple clicks
-  style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
->
-  {loading ? "SUBMITTING..." : "CONFIRM REGISTRATION"} 
-</button>
+            type="submit" 
+            className="confirm-btn" 
+            disabled={loading}
+            style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+          >
+            {loading ? "SUBMITTING..." : "CONFIRM REGISTRATION"} 
+          </button>
         </form>
       </div>
     </div>
