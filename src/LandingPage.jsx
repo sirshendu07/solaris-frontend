@@ -1,48 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import GridScan from './GridScan';
+import './LandingPage.css';
 
 const LandingPage = ({ onRegisterClick }) => {
   const cyanGlow = "#9ef9ff";
 
   return (
-    <div style={{ 
-      position: 'relative', 
-      width: '100%', 
-      height: '100vh', 
-      backgroundColor: '#000', 
-      overflow: 'hidden',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
+    <div className="landing-container">
+      {/* Background Image Layer */}
+      <div className="society-bg"></div>
       
-      {/* BACKGROUND LAYER: 3D Grid */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
-        <GridScan
-          linesColor="#0a1a2a" 
-          scanColor={cyanGlow}
-          gridScale={0.1}
-          scanOpacity={0.5}
-          enablePost={true}
-          bloomIntensity={0.5}
-        />
-      </div>
-
-      {/* CONTENT LAYER: Fully Responsive Typography */}
-      <div style={{ 
-        position: 'relative', 
-        zIndex: 10, 
-        width: '90%',
-        maxWidth: '1200px',
-        color: '#fff', 
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px'
-      }}>
+      {/* Content Layer */}
+      <div className="landing-content">
         
-        {/* PHASE 1: Drops from top */}
+        {/* Solaris Title */}
         <motion.h2
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -57,7 +28,7 @@ const LandingPage = ({ onRegisterClick }) => {
           SOLARIS BONHOOGHLY PHASE 1
         </motion.h2>
 
-        {/* SAC COMMITTEE: Fades in */}
+        {/* Committee Subtitle */}
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -73,7 +44,7 @@ const LandingPage = ({ onRegisterClick }) => {
           SAC COMMITTEE PRESENTS
         </motion.p>
         
-        {/* ANNUAL SPORTS: Main focus with Glow effect */}
+        {/* Main Event Title with Glow */}
         <motion.h1 
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -89,37 +60,16 @@ const LandingPage = ({ onRegisterClick }) => {
           ANNUAL SPORTS 2026
         </motion.h1>
 
-        {/* BUTTON: Pops in last */}
+        {/* Register Button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.8 }}
         >
           <button 
+            className="register-btn"
             onClick={onRegisterClick}
-            style={{
-              padding: 'clamp(12px, 2vw, 18px) clamp(30px, 5vw, 60px)',
-              fontSize: 'clamp(1rem, 1.5vw, 1.3rem)',
-              background: 'transparent',
-              color: '#fff',
-              border: `2px solid ${cyanGlow}`,
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              transition: '0.4s ease',
-              textTransform: 'uppercase',
-              letterSpacing: '2px'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = cyanGlow;
-              e.target.style.color = '#000';
-              e.target.style.boxShadow = `0 0 40px ${cyanGlow}`;
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'transparent';
-              e.target.style.color = '#fff';
-              e.target.style.boxShadow = 'none';
-            }}
+            style={{ borderColor: cyanGlow }}
           >
             Register Now
           </button>
