@@ -54,7 +54,16 @@ const RegistrationForm = ({ group, onBack }) => {
     setLoading(true); // Disable button to prevent duplicate entries
 
     try {
-      const payload = { ...formData, ageGroup: `Group ${group}` };
+      // 1. CLEAN THE NAME: Remove accidental spaces at the start/end
+      const cleanedName = formData.fullName.trim(); 
+
+      // 2. CREATE PAYLOAD: Use the cleaned name
+      const payload = { 
+        ...formData, 
+        fullName: cleanedName, 
+        ageGroup: `Group ${group}` 
+      };
+
       const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,9 +76,9 @@ const RegistrationForm = ({ group, onBack }) => {
         alert("✅ Registration Successful!");
         onBack(); // Return to selection page
       } else {
-        // Specifically check for MongoDB Combined Unique Key error (Name + Tower + Flat).
+        // 3. DUPLICATE CHECK: Handles the case-insensitive collation error from backend
         if (result.error && result.error.includes('E11000')) {
-          alert(`⚠️ Error: ${formData.fullName} is already registered for Tower ${formData.tower}, Flat ${formData.flatNo}.`);
+          alert(`⚠️ Error: ${cleanedName} is already registered for Tower ${formData.tower}, Flat ${formData.flatNo}.`);
         } else {
           alert("❌ Error: " + result.error);
         }
