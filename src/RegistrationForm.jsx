@@ -50,45 +50,45 @@ const RegistrationForm = ({ group, onBack }) => {
   }, [formData.gender, group]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true); // Disable button to prevent duplicate entries
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      // 1. CLEAN THE NAME: Remove accidental spaces at the start/end
-      const cleanedName = formData.fullName.trim(); 
+  // 1. ADVANCED CLEANING: 
+  // .toLowerCase() makes it case-neutral
+  // .replace(/\s+/g, '') removes ALL internal and external spaces
+  const superCleanName = formData.fullName.toLowerCase().replace(/\s+/g, '');
 
-      // 2. CREATE PAYLOAD: Use the cleaned name
-      const payload = { 
-        ...formData, 
-        fullName: cleanedName, 
-        ageGroup: `Group ${group}` 
-      };
+  try {
+    const payload = { 
+      ...formData, 
+      fullName: superCleanName, // Sending the space-free version
+      ageGroup: `Group ${group}` 
+    };
 
-      const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+    const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
 
-      const result = await response.json();
+    const result = await response.json();
 
-      if (response.ok) {
-        alert("✅ Registration Successful!");
-        onBack(); // Return to selection page
+    if (response.ok) {
+      alert("✅ Registration Successful!");
+      onBack();
+    } else {
+      if (result.error && result.error.includes('E11000')) {
+        alert("⚠️ This resident is already registered with these details!");
       } else {
-        // 3. DUPLICATE CHECK: Handles the case-insensitive collation error from backend
-        if (result.error && result.error.includes('E11000')) {
-          alert(`⚠️ Error: ${cleanedName} is already registered for Tower ${formData.tower}, Flat ${formData.flatNo}.`);
-        } else {
-          alert("❌ Error: " + result.error);
-        }
-        setLoading(false); 
+        alert("❌ Error: " + result.error);
       }
-    } catch (err) {
-      alert("❌ Server Error. Please check your internet connection.");
-      setLoading(false); 
+      setLoading(false);
     }
-  };
+  } catch (err) {
+    alert("❌ Server Error.");
+    setLoading(false);
+  }
+};
 
   return (
     <div className="registration-body">
