@@ -51,17 +51,22 @@ const RegistrationForm = ({ group, onBack }) => {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
+
+  // 1. PHONE CHECK
+  if (formData.phoneNo.length !== 10 || isNaN(formData.phoneNo)) {
+    alert("⚠️ Phone Number must be exactly 10 digits!");
+    return;
+  }
+
   setLoading(true);
 
-  // 1. ADVANCED CLEANING: 
-  // .toLowerCase() makes it case-neutral
-  // .replace(/\s+/g, '') removes ALL internal and external spaces
+  // 2. SPACE-KILLER: "Sanju Bera" -> "sanjubera"
   const superCleanName = formData.fullName.toLowerCase().replace(/\s+/g, '');
 
   try {
     const payload = { 
       ...formData, 
-      fullName: superCleanName, // Sending the space-free version
+      fullName: superCleanName, 
       ageGroup: `Group ${group}` 
     };
 
@@ -77,8 +82,9 @@ const RegistrationForm = ({ group, onBack }) => {
       alert("✅ Registration Successful!");
       onBack();
     } else {
+      // E11000 is the MongoDB code for "Duplicate Found"
       if (result.error && result.error.includes('E11000')) {
-        alert("⚠️ This resident is already registered with these details!");
+        alert(`⚠️ This person is already registered!`);
       } else {
         alert("❌ Error: " + result.error);
       }
