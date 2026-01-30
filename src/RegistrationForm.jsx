@@ -52,7 +52,7 @@ const RegistrationForm = ({ group, onBack }) => {
   const handleSubmit = async (e) => {
   e.preventDefault();
 
-  // 1. PHONE CHECK
+  // 1. PHONE CHECK (10 Digits)
   if (formData.phoneNo.length !== 10 || isNaN(formData.phoneNo)) {
     alert("⚠️ Phone Number must be exactly 10 digits!");
     return;
@@ -60,13 +60,13 @@ const RegistrationForm = ({ group, onBack }) => {
 
   setLoading(true);
 
-  // 2. SPACE-KILLER: "Sanju Bera" -> "sanjubera"
-  const superCleanName = formData.fullName.toLowerCase().replace(/\s+/g, '');
+  // 2. CLEANING: Only trim the ends. Keep spaces between words.
+  const cleanName = formData.fullName.trim(); 
 
   try {
     const payload = { 
       ...formData, 
-      fullName: superCleanName, 
+      fullName: cleanName, 
       ageGroup: `Group ${group}` 
     };
 
@@ -82,9 +82,8 @@ const RegistrationForm = ({ group, onBack }) => {
       alert("✅ Registration Successful!");
       onBack();
     } else {
-      // E11000 is the MongoDB code for "Duplicate Found"
       if (result.error && result.error.includes('E11000')) {
-        alert(`⚠️ This person is already registered!`);
+        alert(`⚠️ This resident is already registered with these details!`);
       } else {
         alert("❌ Error: " + result.error);
       }
