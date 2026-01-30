@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './RegistrationForm.css';
 
+/**
+ * Maps age groups to their specific events.
+ * Groups A, B, C, D, and I have the same events for all genders.
+ * Groups E, F, G, and H change based on Male/Female selection.
+ */
 const getAutoEvents = (groupId, gender) => {
   const eventMap = {
     'A': ['25 meter run/walker'],
@@ -18,6 +23,7 @@ const getAutoEvents = (groupId, gender) => {
 };
 
 const RegistrationForm = ({ group, onBack }) => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     tower: '',
@@ -28,56 +34,57 @@ const RegistrationForm = ({ group, onBack }) => {
     selectedSports: [] 
   });
 
-useEffect(() => {
-  // Define groups that DO NOT need gender to show events
-  const genderIndependentGroups = ['A', 'B', 'C', 'D', 'I'];
-  
-  // Show events IF the group doesn't need gender OR if gender is already selected
-  if (genderIndependentGroups.includes(group) || formData.gender) {
-    const events = getAutoEvents(group, formData.gender);
-    setFormData(prev => ({ ...prev, selectedSports: events }));
-  } else {
-    // Clear sports if gender is removed for gender-dependent groups
-    setFormData(prev => ({ ...prev, selectedSports: [] }));
-  }
-}, [formData.gender, group]);
-
-// 1. Add 'loading' to your state at the top of the component
-const [loading, setLoading] = useState(false); 
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  // 2. IMMEDIATELY set loading to true to disable the button
-  setLoading(true); 
-
-  try {
-    const payload = { ...formData, ageGroup: `Group ${group}` };
-    const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (response.ok) {
-      alert("✅ Registration Successful!");
-      onBack(); 
+  /**
+   * Automatically updates the sports list when gender or group changes.
+   */
+  useEffect(() => {
+    const genderIndependentGroups = ['A', 'B', 'C', 'D', 'I'];
+    
+    // Show events instantly for kids/everyone, or wait for gender selection for adults.
+    if (genderIndependentGroups.includes(group) || formData.gender) {
+      const events = getAutoEvents(group, formData.gender);
+      setFormData(prev => ({ ...prev, selectedSports: events }));
     } else {
+      setFormData(prev => ({ ...prev, selectedSports: [] }));
+    }
+  }, [formData.gender, group]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Disable button to prevent duplicate entries
+
+    try {
+      const payload = { ...formData, ageGroup: `Group ${group}` };
+      const response = await fetch('https://solaris-backend-s1jz.onrender.com/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
       const result = await response.json();
-      alert("❌ Error: " + result.error);
-      // 3. Set loading back to false if there's an error so they can try again
+
+      if (response.ok) {
+        alert("✅ Registration Successful!");
+        onBack(); // Return to selection page
+      } else {
+        // Specifically check for MongoDB Combined Unique Key error (Name + Tower + Flat).
+        if (result.error && result.error.includes('E11000')) {
+          alert(`⚠️ Error: ${formData.fullName} is already registered for Tower ${formData.tower}, Flat ${formData.flatNo}.`);
+        } else {
+          alert("❌ Error: " + result.error);
+        }
+        setLoading(false); 
+      }
+    } catch (err) {
+      alert("❌ Server Error. Please check your internet connection.");
       setLoading(false); 
     }
-  } catch (err) {
-    alert("❌ Server Error. Please check your connection.");
-    setLoading(false); 
-  }
-};
+  };
 
-return (
+  return (
     <div className="registration-body">
       <div className="glow-box">
-        <motion.button onClick={onBack} className="back-btn">← BACK</motion.button>
+        <motion.button whileHover={{ x: -5 }} onClick={onBack} className="back-btn">← BACK</motion.button>
         
         <h2>SOLARIS BONHOOGHLY PHASE 1</h2>
         <h1>GROUP {group} REGISTRATION</h1>
@@ -137,7 +144,7 @@ return (
             </div>
           </div>
 
-          {/* EVENT DISPLAY LOGIC */}
+          {/* DYNAMIC EVENT DISPLAY */}
           <div style={{ 
             marginBottom: '30px', 
             padding: '15px', 
@@ -149,7 +156,6 @@ return (
               Events You Are Joining:
             </h3>
             
-            {/* Logic: Show events if it's a general group OR if gender is selected for specific groups */}
             {(['A', 'B', 'C', 'D', 'I'].includes(group) || formData.gender) ? (
               <ul style={{ listStyle: 'none', padding: 0 }}>
                 {formData.selectedSports.map(sport => (
